@@ -1,0 +1,141 @@
+#include <iostream>
+#include <stack>
+
+using namespace std;
+
+// Helper function to display the stack from top to bottom
+void displayStack(stack<int> s) {
+    if (s.empty()) {
+        cout << "Stack is empty.\n";
+        return;
+    }
+
+    cout << "\n--- Current Stack (Top to Bottom) ---\n";
+    while (!s.empty()) {
+        cout << "  | " << s.top() << " |\n";
+        s.pop();
+    }
+    cout << "  -----\n";
+}
+
+int main() {
+    stack<int> mainStack;
+    int choice, num, newNum;
+
+    do {
+        // Menu matching the whiteboard
+        cout << "\n=== STACK MENU ===\n";
+        cout << "1) Add\n";
+        cout << "2) Remove\n";
+        cout << "3) Edit\n";
+        cout << "4) Display\n";
+        cout << "5) Exit\n";
+        cout << "Choose an option: ";
+        cin >> choice;
+
+        switch (choice) {
+            case 1: { // ADD (push)
+                cout << "Enter number: ";
+                cin >> num;
+                mainStack.push(num);
+                cout << num << " added to the stack.\n";
+                break;
+            }
+
+            case 2: { // REMOVE (pop specific number)
+                if (mainStack.empty()) {
+                    cout << "Stack is empty. Nothing to remove.\n";
+                    break;
+                }
+
+                cout << "Enter number: ";
+                cin >> num;
+
+                stack<int> tempStack;
+                bool found = false;
+
+                // Pop items into tempStack until we find the target number
+                while (!mainStack.empty()) {
+                    if (mainStack.top() == num && !found) {
+                        mainStack.pop(); // Remove the matching number
+                        found = true;
+                        break;
+                    } else {
+                        tempStack.push(mainStack.top());
+                        mainStack.pop();
+                    }
+                }
+
+                // Put the remaining items back into mainStack
+                while (!tempStack.empty()) {
+                    mainStack.push(tempStack.top());
+                    tempStack.pop();
+                }
+
+                if (found) {
+                    cout << num << " was removed from the stack.\n";
+                } else {
+                    cout << num << " was not found in the stack.\n";
+                }
+                break;
+            }
+
+            case 3: { // EDIT
+                if (mainStack.empty()) {
+                    cout << "Stack is empty. Nothing to edit.\n";
+                    break;
+                }
+
+                cout << "Enter number: ";
+                cin >> num;
+
+                stack<int> tempStack;
+                bool found = false;
+
+                // Search for the number
+                while (!mainStack.empty()) {
+                    if (mainStack.top() == num && !found) {
+                        cout << "Enter new number: ";
+                        cin >> newNum;
+                        mainStack.pop();
+                        mainStack.push(newNum); // Replace with new number
+                        found = true;
+                        break;
+                    } else {
+                        tempStack.push(mainStack.top());
+                        mainStack.pop();
+                    }
+                }
+
+                // Restore items from tempStack back to mainStack
+                while (!tempStack.empty()) {
+                    mainStack.push(tempStack.top());
+                    tempStack.pop();
+                }
+
+                if (found) {
+                    cout << "Updated " << num << " to " << newNum << ".\n";
+                } else {
+                    cout << num << " was not found in the stack.\n";
+                }
+                break;
+            }
+
+            case 4: { // DISPLAY
+                displayStack(mainStack);
+                break;
+            }
+
+            case 5: { // EXIT
+                cout << "Closing the program...\n";
+                break;
+            }
+
+            default:
+                cout << "Invalid choice. Please enter 1 to 5.\n";
+        }
+
+    } while (choice != 5);
+
+    return 0;
+}
