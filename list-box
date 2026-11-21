@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Whiteboard Fruit List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+        }
+
+        /* Outer container matching the whiteboard layout */
+        .board-container {
+            width: 260px;
+        }
+
+        /* Top row: Text box + ADD button */
+        .input-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            gap: 15px;
+        }
+
+        input[type="text"] {
+            width: 150px;
+            padding: 6px 8px;
+            border: 2px solid #000;
+            font-size: 16px;
+        }
+
+        button {
+            width: 80px;
+            padding: 6px;
+            border: 2px solid #000;
+            background-color: #fff;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Bottom rectangle: The list box */
+        .list-box {
+            width: 150px;
+            height: 220px;
+            border: 2px solid #000;
+            padding: 10px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .list-item {
+            font-size: 16px;
+            margin-bottom: 6px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="board-container">
+        <!-- Input box and ADD button -->
+        <div class="input-row">
+            <input type="text" id="fruitInput" placeholder="Apple">
+            <button onclick="addItem()">ADD</button>
+        </div>
+
+        <!-- Vertical box containing the items -->
+        <div class="list-box" id="fruitList">
+            <div class="list-item">Banana</div>
+            <div class="list-item">Orange</div>
+        </div>
+    </div>
+
+    <script>
+        function addItem() {
+            const input = document.getElementById("fruitInput");
+            const list = document.getElementById("fruitList");
+            const text = input.value.trim();
+
+            if (text !== "") {
+                const newDiv = document.createElement("div");
+                newDiv.className = "list-item";
+                newDiv.textContent = text;
+                list.appendChild(newDiv);
+                input.value = ""; // Clears the input box after adding
+            }
+        }
+    </script>
+
+</body>
+</html>
