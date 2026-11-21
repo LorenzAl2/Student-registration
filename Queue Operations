@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Queue Operations - Colored & Vertical</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f9;
+            margin: 40px;
+            color: #333;
+        }
+
+        h2 {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        /* Input field */
+        input[type="text"] {
+            width: 240px;
+            padding: 8px 10px;
+            font-size: 14px;
+            border: 1px solid #999;
+            border-radius: 3px;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        /* Button row */
+        .button-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            border: none;
+            color: white;
+            padding: 7px 13px;
+            font-size: 13px;
+            font-weight: bold;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .btn-add { background-color: #2e8b57; }     /* Green */
+        .btn-remove { background-color: #e67e22; }  /* Orange */
+        .btn-edit { background-color: #2980b9; }    /* Blue */
+        .btn-display { background-color: #7d5fff; } /* Purple */
+        .btn-exit { background-color: #e74c3c; }    /* Red */
+
+        /* Outer display box */
+        .queue-container {
+            width: 340px;
+            border: 1px solid #777;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #fff;
+            min-height: 120px;
+        }
+
+        .status-text {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #444;
+        }
+
+        .status-text span {
+            font-weight: bold;
+        }
+
+        .label-marker {
+            text-align: center;
+            font-size: 11px;
+            color: #666;
+            margin: 6px 0;
+        }
+
+        /* Vertical queue items */
+        #queueList {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .queue-item {
+            color: white;
+            text-align: center;
+            padding: 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Queue Operations (Patayo at May Kulay)</h2>
+
+    <input type="text" id="valueInput" placeholder="Maglagay ng value">
+
+    <div class="button-group">
+        <button class="btn-add" onclick="enqueue()">Add</button>
+        <button class="btn-remove" onclick="dequeue()">Remove</button>
+        <button class="btn-edit" onclick="editItem()">Edit</button>
+        <button class="btn-display" onclick="displayQueue()">Display</button>
+        <button class="btn-exit" onclick="exitApp()">Exit</button>
+    </div>
+
+    <div class="queue-container" id="mainBox">
+        <div class="status-text">Status: <span id="statusMsg">Ready</span></div>
+
+        <div class="label-marker">▲ FRONT (Unang lalabas)</div>
+        <div id="queueList"></div>
+        <div class="label-marker">▼ REAR (Huling pumasok)</div>
+    </div>
+
+    <script>
+        let queue = [];
+        // Colors cycling for each item added (starts with red-orange like the picture)
+        const colors = ["#e74c3c", "#3498db", "#2ecc71", "#f39c12", "#9b59b6", "#1abc9c"];
+
+        function renderQueue() {
+            const listDiv = document.getElementById("queueList");
+            listDiv.innerHTML = "";
+
+            queue.forEach((item, index) => {
+                const div = document.createElement("div");
+                div.className = "queue-item";
+                div.style.backgroundColor = item.color;
+                div.textContent = `${index + 1}. ${item.value}`;
+                listDiv.appendChild(div);
+            });
+        }
+
+        // Add (Enqueue - adds to REAR)
+        function enqueue() {
+            const input = document.getElementById("valueInput");
+            const val = input.value.trim();
+
+            if (val === "") {
+                document.getElementById("statusMsg").textContent = "Maglagay muna ng value!";
+                return;
+            }
+
+            const color = colors[queue.length % colors.length];
+            queue.push({ value: val, color: color });
+            
+            document.getElementById("statusMsg").textContent = `Added '${val}'`;
+            input.value = "";
+            input.focus();
+            renderQueue();
+        }
+
+        // Remove (Dequeue - removes from FRONT / Unang lalabas)
+        function dequeue() {
+            if (queue.length === 0) {
+                document.getElementById("statusMsg").textContent = "Queue is empty!";
+                return;
+            }
+
+            const removed = queue.shift();
+            document.getElementById("statusMsg").textContent = `Removed '${removed.value}' from FRONT`;
+            renderQueue();
+        }
+
+        // Edit an item by position number
+        function editItem() {
+            if (queue.length === 0) {
+                document.getElementById("statusMsg").textContent = "Queue is empty!";
+                return;
+            }
+
+            const num = prompt(`Enter item number to edit (1 to ${queue.length}):`);
+            const index = parseInt(num) - 1;
+
+            if (!isNaN(index) && index >= 0 && index < queue.length) {
+                const newVal = prompt(`Enter new value for '${queue[index].value}':`);
+                if (newVal !== null && newVal.trim() !== "") {
+                    const oldVal = queue[index].value;
+                    queue[index].value = newVal.trim();
+                    document.getElementById("statusMsg").textContent = `Edited '${oldVal}' to '${newVal.trim()}'`;
+                    renderQueue();
+                }
+            } else if (num !== null) {
+                alert("Invalid item number.");
+            }
+        }
+
+        // Display current queue items
+        function displayQueue() {
+            if (queue.length === 0) {
+                document.getElementById("statusMsg").textContent = "Queue is empty!";
+            } else {
+                const allValues = queue.map(item => item.value).join(", ");
+                document.getElementById("statusMsg").textContent = `Displaying (${queue.length}): ${allValues}`;
+                renderQueue();
+            }
+        }
+
+        // Exit simulation
+        function exitApp() {
+            if (confirm("Gusto mo bang isara ang Queue Operations?")) {
+                document.body.innerHTML = "<h2>Program Closed. Refresh the page to restart.</h2>";
+            }
+        }
+    </script>
+
+</body>
+</html>
