@@ -1,0 +1,80 @@
+
+#include <iostream>
+using namespace std;
+
+int main()
+{
+    double num1, num2, sum, diff, multiply, division;
+    double radius, areacircle;
+    int choice;
+    char choice2;
+
+    cout << "Press 1 for Calculator" << endl;
+    cout << "Press 2 for Area Calculator" << endl;
+    cin >> choice;
+
+    switch (choice)
+    {
+        case 1:
+            cout << "Enter the number" << endl;
+            cin >> num1;
+
+            cout << "Enter another number" << endl;
+            cin >> num2;
+
+            cout << "Press A for addition" << endl;
+            cout << "Press S for subtraction" << endl;
+            cout << "Press M for multiplication" << endl;
+            cout << "Press D for division" << endl;
+            cin >> choice2;
+
+            if (choice2 == 'A' || choice2 == 'a')
+            {
+                sum = num1 + num2;
+                cout << "The answer is " << sum;
+            }
+            else if (choice2 == 'S' || choice2 == 's')
+            {
+                diff = num1 - num2;
+                cout << "The answer is " << diff;
+            }
+            else if (choice2 == 'M' || choice2 == 'm')
+            {
+                multiply = num1 * num2;
+                cout << "The answer is " << multiply;
+            }
+            else if (choice2 == 'D' || choice2 == 'd')
+            {
+                if (num2 != 0)
+                {
+                    division = num1 / num2;
+                    cout << "The answer is " << division;
+                }
+                else
+                {
+                    cout << "Cannot divide by zero!";
+                }
+            }
+            else
+            {
+                cout << "INVALID INPUT";
+            }
+
+            break;
+
+        case 2:
+            cout << "Enter the radius of a circle" << endl;
+            cin >> radius;
+
+            areacircle = 3.1416 * (radius * radius);
+
+            cout << "The area of circle is " << areacircle;
+
+            break;
+
+        default:
+            cout << "INVALID INPUT";
+    }
+
+    return 0;
+}
